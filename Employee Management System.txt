@@ -1,0 +1,192 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
+
+class Employee implements Comparable<Employee> {
+    private String name;
+    private int age;
+    private String address;
+    private int regNumber;
+
+    public Employee(String name, int age, String address, int regNumber) {
+        this.name = name;
+        this.age = age;
+        this.address = address;
+        this.regNumber = regNumber;
+    }
+
+    public String getName() {
+
+        return name;
+    }
+
+    public int getAge() {
+
+        return age;
+    }
+
+    public String getAddress() {
+
+        return address;
+    }
+
+    public int getRegNumber() {
+
+        return regNumber;
+    }
+
+    @Override
+    public int compareTo(Employee other) {
+        return this.name.compareTo(other.name);
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Age: " + age + ", Address: " + address + ", Registration Number: " + regNumber;
+    }
+}
+
+public class EmployeeManagementSystem {
+    private static ArrayList<Employee> employeeList = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            System.out.println("Employee Management System");
+            System.out.println("1. Add Employee");
+            System.out.println("2. Show All Employees");
+            System.out.println("3. Sort by Name");
+            System.out.println("4. Sort by Age");
+            System.out.println("5. Delete Employee");
+            System.out.println("6. Find Employee");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    addEmployee();
+                    break;
+                case 2:
+                    showAllEmployees();
+                    break;
+                case 3:
+                    sortByName();
+                    break;
+                case 4:
+                    sortByAge();
+                    break;
+                case 5:
+                    deleteEmployee();
+                    break;
+                case 6:
+                    findEmployee();
+                    break;
+                case 7:
+                    System.out.println("Exiting the program. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        } while (choice != 7);
+
+        scanner.close();
+    }
+
+    private static void addEmployee() {
+        System.out.print("Enter employee name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter employee age: ");
+        int age = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter employee address: ");
+        String address = scanner.nextLine();
+        System.out.print("Enter employee registration number: ");
+        int regNumber = scanner.nextInt();
+
+        Employee employee = new Employee(name, age, address, regNumber);
+        employeeList.add(employee);
+
+        System.out.println("Employee added successfully");
+    }
+
+    private static void showAllEmployees() {
+        if (employeeList.isEmpty()) {
+            System.out.println("No employees found.");
+        } else {
+            for (Employee employee : employeeList) {
+                System.out.println(employee);
+            }
+        }
+    }
+
+    private static void sortByName() {
+        if (!employeeList.isEmpty()) {
+            Collections.sort(employeeList);
+            System.out.println("Employees sorted by name.");
+            showAllEmployees();
+        } else {
+            System.out.println("No employees found.");
+        }
+    }
+
+    private static void sortByAge() {
+        if (!employeeList.isEmpty()) {
+            employeeList.sort(Comparator.comparingInt(Employee::getAge));
+            System.out.println("Employees sorted by age.");
+            showAllEmployees();
+        } else {
+            System.out.println("No employees found.");
+        }
+    }
+
+    private static void deleteEmployee() {
+        if (!employeeList.isEmpty()) {
+            System.out.print("Enter the registration number of the employee to be deleted: ");
+            int regNumber = scanner.nextInt();
+
+            Employee employeeToDelete = null;
+            for (Employee employee : employeeList) {
+                if (employee.getRegNumber() == regNumber) {
+                    employeeToDelete = employee;
+                    break;
+                }
+            }
+
+            if (employeeToDelete != null) {
+                employeeList.remove(employeeToDelete);
+                System.out.println("Employee deleted successfully.");
+            } else {
+                System.out.println("Employee not found with the given registration number.");
+            }
+        } else {
+            System.out.println("No employees found.");
+        }
+    }
+
+    private static void findEmployee() {
+        if (!employeeList.isEmpty()) {
+            System.out.print("Enter the registration number of the employee to be found: ");
+            int regNumber = scanner.nextInt();
+
+            boolean found = false;
+            for (Employee employee : employeeList) {
+                if (employee.getRegNumber() == regNumber) {
+                    System.out.println("Employee found:\n" + employee);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                System.out.println("Employee not found with the given registration number.");
+            }
+        } else {
+            System.out.println("No employees found.");
+        }
+    }
+}
